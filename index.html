@@ -105,6 +105,18 @@
         <p id="output-warning" style="display:none; margin-top:0.5rem; font-size:0.78rem; color:var(--accent);">
           ⚠️ The generated link is very long. Consider hosting your file and using the URL mode instead.
         </p>
+
+        <!-- CORS proxy link — only shown for URL mode -->
+        <div id="output-proxy-row" style="display:none; margin-top:1rem;">
+          <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:0.4rem;">
+            CORS proxy link <span style="color:var(--text-muted); font-weight:400;">— use if the target server blocks direct requests</span>
+          </label>
+          <div class="output-field">
+            <input type="text" id="output-proxy-link" readonly>
+            <button class="btn btn-primary btn-sm" id="copy-proxy-link-btn">Copy</button>
+            <a class="btn btn-secondary btn-sm" id="open-proxy-link-btn" href="#" target="_blank" rel="noopener">Open</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -153,12 +165,18 @@
       let activeType = 'md';
 
       // Generate link
+      const CORS_PROXY = 'https://corsproxy.io/?url=';
+
       const generateBtn = document.getElementById('generate-btn');
       const outputSection = document.getElementById('output-section');
       const outputLink = document.getElementById('output-link');
       const outputWarning = document.getElementById('output-warning');
       const copyLinkBtn = document.getElementById('copy-link-btn');
       const openLinkBtn = document.getElementById('open-link-btn');
+      const outputProxyRow = document.getElementById('output-proxy-row');
+      const outputProxyLink = document.getElementById('output-proxy-link');
+      const copyProxyLinkBtn = document.getElementById('copy-proxy-link-btn');
+      const openProxyLinkBtn = document.getElementById('open-proxy-link-btn');
 
       generateBtn.addEventListener('click', () => {
         const activeTab = document.querySelector('.tab.active').dataset.tab;
@@ -171,6 +189,7 @@
             return;
           }
           link = Peekfile.buildLink(activeType, 'base64', content);
+          outputProxyRow.style.display = 'none';
         } else {
           const url = document.getElementById('url-input').value.trim();
           if (!url) {
@@ -178,6 +197,12 @@
             return;
           }
           link = Peekfile.buildLink(activeType, 'url', url);
+
+          // Build proxy variant: wrap the target URL in the CORS proxy
+          const proxyLink = Peekfile.buildLink(activeType, 'url', CORS_PROXY + url);
+          outputProxyLink.value = proxyLink;
+          openProxyLinkBtn.href = proxyLink;
+          outputProxyRow.style.display = '';
         }
 
         outputLink.value = link;
@@ -192,6 +217,12 @@
       copyLinkBtn.addEventListener('click', async () => {
         const ok = await Peekfile.copyToClipboard(outputLink.value);
         Peekfile.showToast(ok ? 'Link copied!' : 'Failed to copy.');
+      });
+
+      // Copy proxy link
+      copyProxyLinkBtn.addEventListener('click', async () => {
+        const ok = await Peekfile.copyToClipboard(outputProxyLink.value);
+        Peekfile.showToast(ok ? 'Proxy link copied!' : 'Failed to copy.');
       });
     })();
   </script>
