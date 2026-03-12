@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Preview — Prefile</title>
+  <link rel="icon" type="image/svg+xml" href="../icon.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <!-- Highlight.js for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/github-dark-dimmed.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+</head>
+<body>
+  <!-- Header injected by JS -->
+
+  <main class="container page-content">
+    <!-- Toolbar -->
+    <div class="viewer-toolbar" id="toolbar" style="display:none;">
+      <div class="file-info">
+        <span class="file-badge">MD</span>
+        <span id="file-source"></span>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="copy-source-btn" title="Copy source">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy source
+      </button>
+      <button class="btn btn-secondary btn-sm" id="download-btn" title="Download file">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+      <button class="btn btn-secondary btn-sm" id="share-link-btn" title="Copy shareable link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+    </div>
+
+    <!-- Content area -->
+    <div id="loading" class="state-message">
+      <div class="spinner"></div>
+      <p style="margin-top:1rem; color:var(--text-secondary);">Loading content…</p>
+    </div>
+
+    <div id="error" class="state-message" style="display:none;">
+      <div class="state-icon">⚠️</div>
+      <h2>Could not load content</h2>
+      <p id="error-message"></p>
+      <a href=".." class="btn btn-primary" style="margin-top:1.5rem;">Go to Prefile</a>
+    </div>
+
+    <article id="rendered" class="rendered-content" style="display:none;"></article>
+  </main>
+
+  <footer class="footer">
+    <p>Rendered by <a href="..">Prefile</a> — Open-source file previewer</p>
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    (() => {
+      // Inject header with "Share your files" button
+      Peekfile.renderHeader(true);
+
+      const loadingEl = document.getElementById('loading');
+      const errorEl = document.getElementById('error');
+      const errorMsg = document.getElementById('error-message');
+      const renderedEl = document.getElementById('rendered');
+      const toolbar = document.getElementById('toolbar');
+      const fileSource = document.getElementById('file-source');
+
+      let rawContent = '';
+
+      // Configure marked
+      marked.setOptions({
+        breaks: true,
+        gfm: true,
+        highlight: function(code, lang) {
+          if (lang && hljs.getLanguage(lang)) {
+            try { return hljs.highlight(code, { language: lang }).value; } catch {}
+          }
+          return hljs.highlightAuto(code).value;
+        }
+      });
+
+      function showError(msg) {
+        loadingEl.style.display = 'none';
+        errorMsg.textContent = msg;
+        errorEl.style.display = '';
+      }
+
+      function showContent(html) {
+        loadingEl.style.display = 'none';
+        renderedEl.innerHTML = html;
+        renderedEl.style.display = '';
+        toolbar.style.display = '';
+
+        // Apply highlight.js to any pre>code blocks that marked didn't catch
+        renderedEl.querySelectorAll('pre code').forEach(block => {
+          hljs.highlightElement(block);
+        });
+      }
+
+      // Determine source label
+      const { mode, value } = Peekfile.parseParams();
+      if (mode === 'url') {
+        try {
+          const url = new URL(value);
+          fileSource.textContent = url.hostname + url.pathname.split('/').pop();
+        } catch {
+          fileSource.textContent = 'Remote file';
+        }
+      } else if (mode === 'base64') {
+        fileSource.textContent = 'Inline content (base64)';
+      }
+
+      // Fetch and render
+      Peekfile.fetchContent()
+        .then(content => {
+          rawContent = content;
+
+          // Update page title from first heading
+          const firstHeading = content.match(/^#\s+(.+)/m);
+          if (firstHeading) {
+            document.title = firstHeading[1] + ' — Peekfile';
+          }
+
+          const html = marked.parse(content);
+          showContent(html);
+        })
+        .catch(err => {
+          showError(err.message);
+        });
+
+      // Copy source button
+      document.getElementById('copy-source-btn').addEventListener('click', async () => {
+        if (!rawContent) return;
+        const ok = await Peekfile.copyToClipboard(rawContent);
+        Peekfile.showToast(ok ? 'Source copied!' : 'Failed to copy.');
+      });
+
+      // Download button
+      document.getElementById('download-btn').addEventListener('click', () => {
+        if (!rawContent) return;
+        const typeConfig = Peekfile.FILE_TYPES.md;
+        const filename = 'document' + typeConfig.extension;
+        Peekfile.downloadFile(rawContent, filename, typeConfig.mime);
+      });
+
+      // Share link button
+      document.getElementById('share-link-btn').addEventListener('click', async () => {
+        const ok = await Peekfile.copyToClipboard(window.location.href);
+        Peekfile.showToast(ok ? 'Link copied!' : 'Failed to copy.');
+      });
+    })();
+  </script>
+</body>
+</html>

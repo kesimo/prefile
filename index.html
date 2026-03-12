@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prefile — Share & Preview Files Instantly</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="./" class="header-logo">
+      <span class="logo-icon"><img src="icon.svg" width="28" height="28" alt="Prefile"></span>
+      <span>Prefile</span>
+    </a>
+    <div class="header-actions">
+      <a href="https://github.com/kesimo/prefile" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="container page-content">
+    <!-- Hero -->
+    <section style="text-align:center; padding: 3rem 0 2.5rem;">
+      <img src="icon.svg" width="72" height="72" alt="Prefile" style="margin-bottom:1.25rem; border-radius:16px;">
+      <h1 style="font-size:2.2rem; font-weight:700; margin-bottom:0.5rem;">
+        Share & preview files<br>with a single link
+      </h1>
+      <p style="color:var(--text-secondary); font-size:1.05rem; max-width:520px; margin:0 auto 0.75rem;">
+        Paste your content or provide a URL and get an instant, shareable preview link. No server required.
+      </p>
+      <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; margin-top:1rem;">
+        <span class="file-badge" style="font-size:0.8rem;">Markdown</span>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:3rem;">
+      <div class="card" style="text-align:center;">
+        <div style="margin-bottom:0.5rem; color:var(--accent);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
+        </div>
+        <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:0.25rem;">Paste content</h3>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Paste your Markdown below and generate a base64-encoded link.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="margin-bottom:0.5rem; color:var(--accent);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:0.25rem;">Link a file</h3>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Provide a public URL to any raw file and we'll render it.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="margin-bottom:0.5rem; color:var(--accent);">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </div>
+        <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:0.25rem;">Share instantly</h3>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Copy the generated link and share it — no backend, pure client-side.</p>
+      </div>
+    </section>
+
+    <!-- Generator -->
+    <section class="card" style="margin-bottom:2rem;">
+      <h2 style="font-size:1.1rem; font-weight:600; margin-bottom:1rem;">Generate a shareable link</h2>
+
+      <!-- Format selector -->
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:0.4rem;">File type</label>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-sm btn-primary format-btn" data-type="md">Markdown</button>
+          <!-- Future formats will be added here -->
+        </div>
+      </div>
+
+      <!-- Tabs: Paste vs URL -->
+      <div class="tabs">
+        <button class="tab active" data-tab="paste">Paste content</button>
+        <button class="tab" data-tab="url">Link to file</button>
+      </div>
+
+      <!-- Paste tab -->
+      <div id="tab-paste">
+        <textarea class="textarea" id="content-input" placeholder="# Hello World&#10;&#10;Paste your **Markdown** here..."></textarea>
+      </div>
+
+      <!-- URL tab -->
+      <div id="tab-url" style="display:none;">
+        <input class="input" id="url-input" type="url" placeholder="https://raw.githubusercontent.com/user/repo/main/README.md">
+      </div>
+
+      <div style="margin-top:1rem;">
+        <button class="btn btn-primary" id="generate-btn">Generate link</button>
+      </div>
+
+      <!-- Output -->
+      <div id="output-section" style="display:none; margin-top:1.25rem;">
+        <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:0.4rem;">Shareable link</label>
+        <div class="output-field">
+          <input type="text" id="output-link" readonly>
+          <button class="btn btn-primary btn-sm" id="copy-link-btn">Copy</button>
+          <a class="btn btn-secondary btn-sm" id="open-link-btn" href="#" target="_blank" rel="noopener">Open</a>
+        </div>
+        <p id="output-warning" style="display:none; margin-top:0.5rem; font-size:0.78rem; color:var(--accent);">
+          ⚠️ The generated link is very long. Consider hosting your file and using the URL mode instead.
+        </p>
+      </div>
+    </section>
+
+    <!-- URL scheme reference -->
+    <section class="card" style="margin-bottom:2rem;">
+      <h2 style="font-size:1.1rem; font-weight:600; margin-bottom:0.75rem;">URL scheme</h2>
+      <div style="font-family:var(--font-mono); font-size:0.82rem; line-height:2;">
+        <div>
+          <span style="color:var(--text-secondary);">URL mode:</span>
+          <code style="background:var(--bg-tertiary); padding:0.2em 0.5em; border-radius:4px; color:var(--accent);">/{type}/?url=https://…</code>
+        </div>
+        <div>
+          <span style="color:var(--text-secondary);">Base64 mode:</span>
+          <code style="background:var(--bg-tertiary); padding:0.2em 0.5em; border-radius:4px; color:var(--accent);">/{type}/?base64=SGVsbG8…</code>
+        </div>
+        <div style="margin-top:0.5rem; font-family:var(--font-sans); font-size:0.8rem; color:var(--text-muted);">
+          <code>{type}</code> = <code>md</code> (more types coming soon)
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Prefile — Open-source file previewer. No tracking. No backend. Pure client-side.</p>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script>
+    (() => {
+      // Tab switching
+      const tabs = document.querySelectorAll('.tab');
+      const tabPaste = document.getElementById('tab-paste');
+      const tabUrl = document.getElementById('tab-url');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const target = tab.dataset.tab;
+          tabPaste.style.display = target === 'paste' ? '' : 'none';
+          tabUrl.style.display = target === 'url' ? '' : 'none';
+        });
+      });
+
+      // Active format type
+      let activeType = 'md';
+
+      // Generate link
+      const generateBtn = document.getElementById('generate-btn');
+      const outputSection = document.getElementById('output-section');
+      const outputLink = document.getElementById('output-link');
+      const outputWarning = document.getElementById('output-warning');
+      const copyLinkBtn = document.getElementById('copy-link-btn');
+      const openLinkBtn = document.getElementById('open-link-btn');
+
+      generateBtn.addEventListener('click', () => {
+        const activeTab = document.querySelector('.tab.active').dataset.tab;
+        let link = '';
+
+        if (activeTab === 'paste') {
+          const content = document.getElementById('content-input').value.trim();
+          if (!content) {
+            Peekfile.showToast('Please enter some content.');
+            return;
+          }
+          link = Peekfile.buildLink(activeType, 'base64', content);
+        } else {
+          const url = document.getElementById('url-input').value.trim();
+          if (!url) {
+            Peekfile.showToast('Please enter a URL.');
+            return;
+          }
+          link = Peekfile.buildLink(activeType, 'url', url);
+        }
+
+        outputLink.value = link;
+        openLinkBtn.href = link;
+        outputSection.style.display = '';
+
+        // Warn if link is very long (> 4000 chars)
+        outputWarning.style.display = link.length > 4000 ? '' : 'none';
+      });
+
+      // Copy link
+      copyLinkBtn.addEventListener('click', async () => {
+        const ok = await Peekfile.copyToClipboard(outputLink.value);
+        Peekfile.showToast(ok ? 'Link copied!' : 'Failed to copy.');
+      });
+    })();
+  </script>
+</body>
+</html>
