@@ -106,15 +106,23 @@
           ⚠️ The generated link is very long. Consider hosting your file and using the URL mode instead.
         </p>
 
-        <!-- CORS proxy link — only shown for URL mode -->
+        <!-- CORS proxy links — only shown for URL mode -->
         <div id="output-proxy-row" style="display:none; margin-top:1rem;">
           <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:0.4rem;">
-            CORS proxy link <span style="color:var(--text-muted); font-weight:400;">— use if the target server blocks direct requests</span>
+            Via codetabs proxy <span style="color:var(--text-muted); font-weight:400;">— use if the target server blocks direct requests</span>
           </label>
           <div class="output-field">
             <input type="text" id="output-proxy-link" readonly>
             <button class="btn btn-primary btn-sm" id="copy-proxy-link-btn">Copy</button>
             <a class="btn btn-secondary btn-sm" id="open-proxy-link-btn" href="#" target="_blank" rel="noopener">Open</a>
+          </div>
+          <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:0.4rem; margin-top:0.75rem;">
+            Via allorigins proxy <span style="color:var(--text-muted); font-weight:400;">— alternative if codetabs is unavailable</span>
+          </label>
+          <div class="output-field">
+            <input type="text" id="output-proxy-link2" readonly>
+            <button class="btn btn-primary btn-sm" id="copy-proxy-link2-btn">Copy</button>
+            <a class="btn btn-secondary btn-sm" id="open-proxy-link2-btn" href="#" target="_blank" rel="noopener">Open</a>
           </div>
         </div>
       </div>
@@ -165,7 +173,8 @@
       let activeType = 'md';
 
       // Generate link
-      const CORS_PROXY = 'https://corsproxy.io/?url=';
+      const CORS_PROXY_CODETABS = 'https://api.codetabs.com/v1/proxy?quest=';
+      const CORS_PROXY_ALLORIGINS = 'https://api.allorigins.win/raw?url=';
 
       const generateBtn = document.getElementById('generate-btn');
       const outputSection = document.getElementById('output-section');
@@ -177,6 +186,9 @@
       const outputProxyLink = document.getElementById('output-proxy-link');
       const copyProxyLinkBtn = document.getElementById('copy-proxy-link-btn');
       const openProxyLinkBtn = document.getElementById('open-proxy-link-btn');
+      const outputProxyLink2 = document.getElementById('output-proxy-link2');
+      const copyProxyLink2Btn = document.getElementById('copy-proxy-link2-btn');
+      const openProxyLink2Btn = document.getElementById('open-proxy-link2-btn');
 
       generateBtn.addEventListener('click', () => {
         const activeTab = document.querySelector('.tab.active').dataset.tab;
@@ -191,17 +203,27 @@
           link = Peekfile.buildLink(activeType, 'base64', content);
           outputProxyRow.style.display = 'none';
         } else {
-          const url = document.getElementById('url-input').value.trim();
-          if (!url) {
+          const rawUrl = document.getElementById('url-input').value.trim();
+          if (!rawUrl) {
             Peekfile.showToast('Please enter a URL.');
             return;
           }
+          // Normalize: decode any existing percent-encoding so we always start clean
+          let url;
+          try { url = decodeURIComponent(rawUrl); } catch { url = rawUrl; }
+
           link = Peekfile.buildLink(activeType, 'url', url);
 
-          // Build proxy variant: wrap the target URL in the CORS proxy
-          const proxyLink = Peekfile.buildLink(activeType, 'url', CORS_PROXY + url);
+          const base = Peekfile.getBaseUrl() + '/' + activeType + '/?url=';
+
+          const proxyLink = base + encodeURIComponent(CORS_PROXY_CODETABS + encodeURIComponent(url));
           outputProxyLink.value = proxyLink;
           openProxyLinkBtn.href = proxyLink;
+
+          const proxyLink2 = base + encodeURIComponent(CORS_PROXY_ALLORIGINS + encodeURIComponent(url));
+          outputProxyLink2.value = proxyLink2;
+          openProxyLink2Btn.href = proxyLink2;
+
           outputProxyRow.style.display = '';
         }
 
@@ -219,9 +241,15 @@
         Peekfile.showToast(ok ? 'Link copied!' : 'Failed to copy.');
       });
 
-      // Copy proxy link
+      // Copy proxy link (codetabs)
       copyProxyLinkBtn.addEventListener('click', async () => {
         const ok = await Peekfile.copyToClipboard(outputProxyLink.value);
+        Peekfile.showToast(ok ? 'Proxy link copied!' : 'Failed to copy.');
+      });
+
+      // Copy proxy link (allorigins)
+      copyProxyLink2Btn.addEventListener('click', async () => {
+        const ok = await Peekfile.copyToClipboard(outputProxyLink2.value);
         Peekfile.showToast(ok ? 'Proxy link copied!' : 'Failed to copy.');
       });
     })();
